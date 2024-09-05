@@ -8,7 +8,7 @@ from PIL import Image
 import numpy as np
 
 # Load YOLOv8 model
-model = YOLO('C:/Users/lenovo/OneDrive - King Suad University/Desktop/VS_code/T5_Mini_Project_YOLO/yolov8_trained.pt')  # Replace with your custom-trained model if needed
+model = YOLO('miniProject/yolov8_trained.pt')  # Replace with your custom-trained model if needed
 
 st.title("Motorcycle Helmet Detection")
 
