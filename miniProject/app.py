@@ -22,7 +22,7 @@ if uploaded_file is not None:
         image_np = np.array(image)
 
         # Perform detection on the image
-        results = model.track(image_np)
+        results = model(image_np)
 
         # Annotate the image with detections
         annotated_image = results[0].plot()
