@@ -1,3 +1,4 @@
+
 import streamlit as st
 import cv2
 import tempfile
@@ -7,7 +8,7 @@ from PIL import Image
 import numpy as np
 
 # Load YOLOv8 model
-model = YOLO('miniProject/yolov8_trained.pt')  # Replace with your custom-trained model if needed
+model = YOLO('C:/Users/lenovo/OneDrive - King Suad University/Desktop/VS_code/T5_Mini_Project_YOLO/yolov8_trained.pt')  # Replace with your custom-trained model if needed
 
 st.title("Motorcycle Helmet Detection")
 
@@ -71,7 +72,7 @@ if uploaded_file is not None:
                 break
 
             # Perform detection
-            results = model.track(frame)
+            results = model(frame)
 
             # Annotate the frame with detections
             annotated_frame = results[0].plot()
