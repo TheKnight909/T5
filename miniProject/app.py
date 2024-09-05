@@ -65,11 +65,10 @@ if uploaded_file is not None:
         out = cv2.VideoWriter(processed_video_file.name, fourcc, fps, (frame_width, frame_height))
 
         # Initialize tracker
-        tracker = cv2.TrackerKCF_create()  # Or use cv2.TrackerMOSSE_create()
+        tracker = cv2.TrackerKCF_create()  # Update to TrackerKCF_create() for OpenCV 4.5.1 and later
 
         # Variable to store tracking state
         tracking = False
-        bbox = None
 
         # Process the video frame by frame
         while video.isOpened():
@@ -77,29 +76,10 @@ if uploaded_file is not None:
             if not ret:
                 break
 
-            if not tracking:
-                # Perform detection
-                results = model(frame)
-                
-                # Extract bounding boxes from results
-                boxes = results[0].boxes.xyxy.numpy()
-                
-                # Initialize tracking with the first detected object
-                if len(boxes) > 0:
-                    bbox = boxes[0]  # Take the first detected object
-                    bbox = (int(bbox[0]), int(bbox[1]), int(bbox[2] - bbox[0]), int(bbox[3] - bbox[1]))
-                    tracker.init(frame, bbox)
-                    tracking = True
-            else:
-                # Update tracker
-                success, bbox = tracker.update(frame)
-                if success:
-                    # Draw bounding box
-                    p1 = (int(bbox[0]), int(bbox[1]))
-                    p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
-                    cv2.rectangle(frame, p1, p2, (0, 255, 0), 2, 1)
+            # Perform detection
+            results = model(frame)
 
-            # Annotate the frame with detections and tracking
+            # Annotate the frame with detections
             annotated_frame = results[0].plot()
 
             # Write the annotated frame to the output video file
