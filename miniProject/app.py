@@ -22,7 +22,7 @@ if uploaded_file is not None:
         image_np = np.array(image)
 
         # Perform detection on the image
-        results = model(image_np)
+        results = model.track(image_np)
 
         # Annotate the image with detections
         annotated_image = results[0].plot()
@@ -64,12 +64,6 @@ if uploaded_file is not None:
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(processed_video_file.name, fourcc, fps, (frame_width, frame_height))
 
-        # Initialize tracker
-        tracker = cv2.TrackerKCF_create()  # Update to TrackerKCF_create() for OpenCV 4.5.1 and later
-
-        # Variable to store tracking state
-        tracking = False
-
         # Process the video frame by frame
         while video.isOpened():
             ret, frame = video.read()
@@ -77,7 +71,7 @@ if uploaded_file is not None:
                 break
 
             # Perform detection
-            results = model(frame)
+            results = model.track(frame)
 
             # Annotate the frame with detections
             annotated_frame = results[0].plot()
