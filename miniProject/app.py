@@ -65,7 +65,7 @@ if uploaded_file is not None:
         out = cv2.VideoWriter(processed_video_file.name, fourcc, fps, (frame_width, frame_height))
 
         # Initialize tracker
-        tracker = cv2.TrackerCSRT_create()
+        tracker = cv2.TrackerKCF_create()  # Or use cv2.TrackerMOSSE_create()
 
         # Variable to store tracking state
         tracking = False
