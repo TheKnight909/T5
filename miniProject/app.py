@@ -1,4 +1,3 @@
-
 import streamlit as st
 import cv2
 import tempfile
@@ -65,16 +64,42 @@ if uploaded_file is not None:
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(processed_video_file.name, fourcc, fps, (frame_width, frame_height))
 
+        # Initialize tracker
+        tracker = cv2.TrackerCSRT_create()
+
+        # Variable to store tracking state
+        tracking = False
+        bbox = None
+
         # Process the video frame by frame
         while video.isOpened():
             ret, frame = video.read()
             if not ret:
                 break
 
-            # Perform detection
-            results = model(frame)
+            if not tracking:
+                # Perform detection
+                results = model(frame)
+                
+                # Extract bounding boxes from results
+                boxes = results[0].boxes.xyxy.numpy()
+                
+                # Initialize tracking with the first detected object
+                if len(boxes) > 0:
+                    bbox = boxes[0]  # Take the first detected object
+                    bbox = (int(bbox[0]), int(bbox[1]), int(bbox[2] - bbox[0]), int(bbox[3] - bbox[1]))
+                    tracker.init(frame, bbox)
+                    tracking = True
+            else:
+                # Update tracker
+                success, bbox = tracker.update(frame)
+                if success:
+                    # Draw bounding box
+                    p1 = (int(bbox[0]), int(bbox[1]))
+                    p2 = (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3]))
+                    cv2.rectangle(frame, p1, p2, (0, 255, 0), 2, 1)
 
-            # Annotate the frame with detections
+            # Annotate the frame with detections and tracking
             annotated_frame = results[0].plot()
 
             # Write the annotated frame to the output video file
