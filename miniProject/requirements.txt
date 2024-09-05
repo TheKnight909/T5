@@ -1,5 +1,6 @@
 streamlit
-opencv-contrib-python
 ultralytics
-Pillow
+opencv-python
+pillow
 numpy
+dill
